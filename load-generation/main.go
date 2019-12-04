@@ -16,6 +16,7 @@ import (
 
 const healthyitemid = "03fef6ac-1896-4ce8-bd69-b798f85c6e0b"
 const faultyitemid = "03fef6ac-1896-4ce8-bd69-b798f85c6e0f"
+const slowitemid = "03fef6ac-1896-4ce8-bd69-b798f86c6fac"
 
 func main() {
 
@@ -36,6 +37,8 @@ func main() {
 		problem := os.Args[2]
 		if problem == "cpu" {
 			item = faultyitemid
+		} else if problem == "responsetime" {
+			item = slowitemid
 		}
 	}
 
@@ -68,7 +71,8 @@ func main() {
 			continue
 		}
 
-		if resp.StatusCode == 201 {
+		// print either success message or error message
+		if resp.StatusCode == 201 || resp.StatusCode == 500 {
 			var result map[string]interface{}
 			json.NewDecoder(resp.Body).Decode(&result)
 			log.Println(result)
